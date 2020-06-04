@@ -363,13 +363,12 @@ class TaskCard extends StatelessWidget {
                   padding: EdgeInsets.only(bottom:18.0,top: 1.0),
                   child: ListView.builder(
                     itemBuilder: (BuildContext context, int index) {
-                      if (index == to.length) {               
+                      if (index == to.where((it) => it.isCompleted == 0).toList().length) {              
                         return SizedBox(
                           height: 56, // size of FAB
                         );
                       }
-                      var todo = to[index];
-                      // print(index);
+                      var todo = to.where((it) => it.isCompleted == 0).toList()[index];
                       return Container(
                         // padding: EdgeInsets.only(right: 22.0),
                         child: ListTile(
@@ -391,7 +390,7 @@ class TaskCard extends StatelessWidget {
                         ),
                       );
                     },
-                    itemCount: to.length + 1,
+                    itemCount: to.where((it) => it.isCompleted == 0).toList().length + 1,
                   ),
                 ),
               ),
