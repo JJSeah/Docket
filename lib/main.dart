@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:todo/model/todo_model.dart';
 
 import 'package:todo/scopedmodel/todo_list_model.dart';
 import 'package:todo/gradient_background.dart';
@@ -187,6 +188,7 @@ class _MyHomePageState extends State<MyHomePage>
                                   getTotalTodos: model.getTotalTodosFrom,
                                   getLefttaskno: model.getTaskLeft,
                                   task: _tasks[index],
+                                  to: _todos.where((it) => it.parent ==_tasks[index].id).toList(),
                                 );
                               }
                             },
@@ -274,6 +276,7 @@ class TaskCard extends StatelessWidget {
   final TaskGetter<Task, int> getLefttaskno;
   final TaskGetter<Task, HeroId> getHeroIds;
   final TaskGetter<Task, int> getTaskCompletionPercent;
+  final List<Todo> to;
 
   TaskCard({
     @required this.backdropKey,
@@ -283,6 +286,8 @@ class TaskCard extends StatelessWidget {
     @required this.getHeroIds,
     @required this.getTaskCompletionPercent,
     @required this.getLefttaskno,
+    @required this.to,
+    // List<Todo> to,
   });
 
   @override
@@ -352,9 +357,47 @@ class TaskCard extends StatelessWidget {
                       ),
                     ],
                   )),
-              Spacer(
-                flex: 8,
+              Container(
+                height: 330,
+                child: Padding(
+                  padding: EdgeInsets.only(bottom:18.0,top: 1.0),
+                  child: ListView.builder(
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == to.length) {               
+                        return SizedBox(
+                          height: 56, // size of FAB
+                        );
+                      }
+                      var todo = to[index];
+                      // print(index);
+                      return Container(
+                        // padding: EdgeInsets.only(right: 22.0),
+                        child: ListTile(
+                          leading: Checkbox(
+                              value: todo.isCompleted == 1 ? true : false),                        
+                          title: Text(
+                            todo.name,
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontWeight: FontWeight.w600,
+                              color: todo.isCompleted == 1
+                                  ? color
+                                  : Colors.black54,
+                              decoration: todo.isCompleted == 1
+                                  ? TextDecoration.lineThrough
+                                  : TextDecoration.none,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                    itemCount: to.length + 1,
+                  ),
+                ),
               ),
+              // Spacer(
+              //   flex: 8,
+              // ),
               Container(
                 margin: EdgeInsets.only(bottom: 4.0),
                 child: Hero(

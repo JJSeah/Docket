@@ -23,140 +23,144 @@ class DetailScreen extends StatefulWidget {
   State<StatefulWidget> createState() {
     return _DetailScreenState();
   }
+}
 
+class _DetailScreenState extends State<DetailScreen>
+    with SingleTickerProviderStateMixin {
+  AnimationController _controller;
+  Animation<Offset> _animation;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+    );
+    _animation = Tween<Offset>(begin: Offset(0, 1.0), end: Offset(0.0, 0.0))
+        .animate(_controller);
   }
-  
-  class _DetailScreenState extends State<DetailScreen>
-      with SingleTickerProviderStateMixin {
-    AnimationController _controller;
-    Animation<Offset> _animation;
-  
-    @override
-    void initState() {
-      super.initState();
-      _controller = AnimationController(
-        vsync: this,
-        duration: Duration(milliseconds: 300),
-      );
-      _animation = Tween<Offset>(begin: Offset(0, 1.0), end: Offset(0.0, 0.0))
-          .animate(_controller);
-    }
-  
-    @override
-    Widget build(BuildContext context) {
-      _controller.forward();
-      return ScopedModelDescendant<TodoListModel>(
-        builder: (BuildContext context, Widget child, TodoListModel model) {
-          Task _task;
-          TextEditingController textEditingController = TextEditingController();
-  
-          try {
-            _task = model.tasks.firstWhere((it) => it.id == widget.taskId);
-          } catch (e) {
-            return Container(
-              color: Colors.white,
-            );
-          }
-  
-          var _todos =
-              model.todos.where((it) => it.parent == widget.taskId).toList();
-          var _hero = widget.heroIds;
-          var _color = ColorUtils.getColorFrom(id: _task.color);
-          var _icon = IconData(_task.codePoint, fontFamily: 'MaterialIcons');
-  
-          return Theme(
-            data: ThemeData(primarySwatch: _color),
-            child: Scaffold(
+
+  @override
+  Widget build(BuildContext context) {
+    _controller.forward();
+    return ScopedModelDescendant<TodoListModel>(
+      builder: (BuildContext context, Widget child, TodoListModel model) {
+        Task _task;
+        TextEditingController textEditingController = TextEditingController();
+
+        try {
+          _task = model.tasks.firstWhere((it) => it.id == widget.taskId);
+        } catch (e) {
+          return Container(
+            color: Colors.white,
+          );
+        }
+
+        var _todos = model.todos.where((it) => it.parent == widget.taskId).toList();
+        var _hero = widget.heroIds;
+        var _color = ColorUtils.getColorFrom(id: _task.color);
+        var _icon = IconData(_task.codePoint, fontFamily: 'MaterialIcons');
+
+        return Theme(
+          data: ThemeData(primarySwatch: _color),
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: AppBar(
+              elevation: 0,
+              iconTheme: IconThemeData(color: Colors.black26),
+              brightness: Brightness.light,
               backgroundColor: Colors.white,
-              appBar: AppBar(
-                elevation: 0,
-                iconTheme: IconThemeData(color: Colors.black26),
-                brightness: Brightness.light,
-                backgroundColor: Colors.white,
-                actions: [
-                  IconButton(
-                    icon: Icon(Icons.edit),
-                    color: _color,
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditTaskScreen(
-                            taskId: _task.id,
-                            taskName: _task.name,
-                            icon: _icon,
-                            color: _color,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.edit),
+                  color: _color,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditTaskScreen(
+                          taskId: _task.id,
+                          taskName: _task.name,
+                          icon: _icon,
+                          color: _color,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                SimpleAlertDialog(
+                  color: _color,
+                  onActionPressed: () => model.removeTask(_task),
+                ),
+              ],
+            ),
+            body: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
+              child: Column(children: [
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 36.0, vertical: 0.0),
+                  height: 170,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      TodoBadge(
+                        color: _color,
+                        codePoint: _task.codePoint,
+                        id: _hero.codePointId,
+                      ),
+                      Spacer(
+                        flex: 1,
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 4.0),
+                        child: Hero(
+                          tag: _hero.remainingTaskId,
+                          child: Text(
+                            "${model.getTotalTodosFrom(_task)} Task",
+                            style: Theme.of(context)
+                                .textTheme
+                                .body1
+                                .copyWith(color: Colors.grey[500]),
                           ),
                         ),
-                      );
-                    },
-                  ),
-                  SimpleAlertDialog(
-                    color: _color,
-                    onActionPressed: () => model.removeTask(_task),
-                  ),
-                ],
-              ),
-              body: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 0.0, vertical: 8.0),
-                child: Column(children: [
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 36.0, vertical: 0.0),
-                    height: 170,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        TodoBadge(
-                          color: _color,
-                          codePoint: _task.codePoint,
-                          id: _hero.codePointId,
-                        ),
-                        Spacer(
-                          flex: 1,
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 4.0),
-                          child: Hero(
-                            tag: _hero.remainingTaskId,
-                            child: Text(
-                              "${model.getTotalTodosFrom(_task)} Task",
+                      ),
+                      Container(
+                        child: Hero(
+                          tag: 'title_hero_unused', //_hero.titleId,
+                          child: Text(_task.name,
                               style: Theme.of(context)
                                   .textTheme
-                                  .body1
-                                  .copyWith(color: Colors.grey[500]),
-                            ),
-                          ),
+                                  .title
+                                  .copyWith(color: Colors.black54)),
                         ),
-                        Container(
-                          child: Hero(
-                            tag: 'title_hero_unused', //_hero.titleId,
-                            child: Text(_task.name,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .title
-                                    .copyWith(color: Colors.black54)),
-                          ),
+                      ),
+                      Spacer(),
+                      Hero(
+                        tag: _hero.progressId,
+                        child: TaskProgressIndicator(
+                          color: _color,
+                          progress: model.getTaskCompletionPercent(_task),
                         ),
-                        Spacer(),
-                        Hero(
-                          tag: _hero.progressId,
-                          child: TaskProgressIndicator(
-                            color: _color,
-                            progress: model.getTaskCompletionPercent(_task),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 4.0),
+                        child: TextField(
+                          minLines: 1,
+                          maxLines: 2,
+                          decoration: InputDecoration(
+                            hintText: '+ New Item',
+                            border: UnderlineInputBorder(
+                                borderSide: new BorderSide(
+                                    color: Color.fromRGBO(173, 179, 191, 1),
+                                    width: 0.5,
+                                    style: BorderStyle.none)),
                           ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 4.0),
-                          child: TextField(
-                            minLines: 1,
-                            maxLines: 2,
-                            decoration: InputDecoration(
-                                hintText: '+ New Item', border: InputBorder.none),
-                            textInputAction: TextInputAction.done,
-                            controller: textEditingController,
-                            onSubmitted: (String s) {
-                              model.addTodo(Todo(
+                          textInputAction: TextInputAction.done,
+                          controller: textEditingController,
+                          onSubmitted: (String s) {
+                            model.addTodo(Todo(
                               s,
                               parent: _task.id,
                             ));
@@ -177,6 +181,7 @@ class DetailScreen extends StatefulWidget {
                           );
                         }
                         var todo = _todos[index];
+                        print(index);
                         return Container(
                           padding: EdgeInsets.only(left: 22.0, right: 22.0),
                           child: ListTile(
