@@ -185,7 +185,8 @@ class _DetailScreenState extends State<DetailScreen>
                         .copyWith(color: Colors.grey[500]),
                   ),
                 ),
-                Expanded(
+                Container(
+                  height: 300,
                   child: Padding(
                     padding: EdgeInsets.only(top: 16.0, bottom: 20.0),
                     child: ListView.builder(
@@ -231,60 +232,31 @@ class _DetailScreenState extends State<DetailScreen>
                     ),
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 4.0),
-                  child: Text(
-                    "Dones",
-                    style: Theme.of(context)
-                        .textTheme
-                        .body1
-                        .copyWith(color: Colors.grey[500]),
-                  ),
-                ),
                 Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 16.0),
-                    child: ListView.builder(
-                      itemBuilder: (BuildContext context, int index) {
-                        if (index == _dones.length) {
-                          return SizedBox(
-                            height: 56, // size of FAB
-                          );
-                        }
-                        var todo = _dones[index];
-                        return Container(
-                          padding: EdgeInsets.only(left: 22.0, right: 22.0),
-                          child: ListTile(
-                            onTap: () => model.updateTodo(todo.copy(
-                                isCompleted: todo.isCompleted == 1 ? 0 : 1)),
-                            contentPadding: EdgeInsets.symmetric(
-                                horizontal: 0, vertical: 8.0),
-                            leading: Checkbox(
-                                onChanged: (value) => model.updateTodo(
-                                    todo.copy(isCompleted: value ? 1 : 0)),
-                                value: todo.isCompleted == 1 ? true : false),
-                            trailing: IconButton(
-                              icon: Icon(Icons.delete_outline),
-                              onPressed: () => model.removeTodo(todo),
-                            ),
-                            title: Text(
-                              todo.name,
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w600,
-                                color: todo.isCompleted == 1
-                                    ? _color
-                                    : Colors.black54,
-                                decoration: todo.isCompleted == 1
-                                    ? TextDecoration.lineThrough
-                                    : TextDecoration.none,
-                              ),
-                            ),
-                          ),
+                  child: ListView.builder(
+                    itemCount: 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      if (index == _todos.length) {
+                        return SizedBox(
+                          height: 56, // size of FAB
                         );
-                      },
-                      itemCount: _dones.length + 1,
-                    ),
+                      }
+                      return new ExpansionTile(
+                        title: new Text(
+                          "Dones",
+                          style: Theme.of(context)
+                              .textTheme
+                              .body1
+                              .copyWith(color: Colors.grey[500]),
+                        ),
+                        children: <Widget>[
+                          new Column(
+                            children: _buildExpandableContent(
+                                _dones[index], _color, _dones),
+                          ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ]),
@@ -293,6 +265,40 @@ class _DetailScreenState extends State<DetailScreen>
         );
       },
     );
+  }
+
+  _buildExpandableContent(Todo dones, _color, _dones) {
+    TodoListModel model;
+    List<Widget> columnContent = [];
+    // var dones = _dones[index];
+    for (Todo name in _dones)
+      columnContent.add(
+        new ListTile(
+          onTap: () => model.updateTodo(
+              dones.copy(isCompleted: dones.isCompleted == 1 ? 0 : 1)),
+          contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
+          leading: Checkbox(
+              onChanged: (value) =>
+                  model.updateTodo(dones.copy(isCompleted: value ? 1 : 0)),
+              value: dones.isCompleted == 1 ? true : false),
+          trailing: IconButton(
+            icon: Icon(Icons.delete_outline),
+            onPressed: () => model.removeTodo(dones),
+          ),
+          title: Text(
+            name.name,
+            style: TextStyle(
+              fontSize: 18.0,
+              fontWeight: FontWeight.w600,
+              color: dones.isCompleted == 1 ? _color : Colors.black54,
+              decoration: dones.isCompleted == 1
+                  ? TextDecoration.lineThrough
+                  : TextDecoration.none,
+            ),
+          ),
+        ),
+      );
+    return columnContent;
   }
 
   @override
