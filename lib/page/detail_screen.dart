@@ -68,10 +68,88 @@ class _DetailScreenState extends State<DetailScreen>
         var _color = ColorUtils.getColorFrom(id: _task.color);
         var _icon = IconData(_task.codePoint, fontFamily: 'MaterialIcons');
 
+        void _showAddDialog(Todo todo) {
+          String taskName;
+          TextEditingController deadline = new TextEditingController();
+          // flutter defined function
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              // return object of type Dialog
+              return AlertDialog(
+                content: Container(
+                  padding: EdgeInsets.all(20),
+                  constraints: BoxConstraints.expand(
+                    height: 250,
+                  ),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(13)),
+                      color: Colors.white),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text("Edit Task"),
+                      Container(
+                        child: TextField(
+                          controller: TextEditingController()..text = todo.name,
+                          onChanged: (text) => {taskName = text},
+                          decoration: InputDecoration(
+                            hintText: "Name of task",
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: _color),
+                            ),
+                          ),
+                        ),
+                      ),
+                      // Container(
+                      //     child: TextField(
+                      //       controller: deadline,
+                      //       decoration: InputDecoration(
+                      //         hintText: "Deadline",
+                      //         enabledBorder: UnderlineInputBorder(
+                      //       borderSide: BorderSide(color: Colors.white),
+                      //       ),
+                      //       ),
+                      //     ),
+                      // ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          RaisedButton(
+                            color: _color,
+                            child: Text("Cancel",
+                                style: TextStyle(color: Colors.white)),
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                          ),
+                          RaisedButton(
+                            color: _color,
+                            child: Text("Confirm",
+                                style: TextStyle(color: Colors.white)),
+                            onPressed: () {
+                              if (taskName != null) {
+                                model.updateTodo(todo.copy(name: taskName));
+                                Navigator.pop(context);
+                              }
+                            },
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        }
+
         return Theme(
           data: ThemeData(primarySwatch: _color),
           child: Scaffold(
-            resizeToAvoidBottomInset: false, 
+            resizeToAvoidBottomInset: false,
             backgroundColor: Colors.white,
             appBar: AppBar(
               elevation: 0,
@@ -196,6 +274,7 @@ class _DetailScreenState extends State<DetailScreen>
                           child: ListTile(
                             onTap: () => model.updateTodo(todo.copy(
                                 isCompleted: todo.isCompleted == 1 ? 0 : 1)),
+                            onLongPress: () => _showAddDialog(todo),
                             contentPadding: EdgeInsets.symmetric(
                                 horizontal: 0, vertical: 8.0),
                             leading: Checkbox(
@@ -245,33 +324,34 @@ class _DetailScreenState extends State<DetailScreen>
                                 height: 56, // size of FAB
                               );
                             }
-                            var does = _dones[index];
+                            var dones = _dones[index];
                             return Container(
                               padding: EdgeInsets.only(left: 22.0, right: 22.0),
                               child: ListTile(
-                                onTap: () => model.updateTodo(does.copy(
+                                onTap: () => model.updateTodo(dones.copy(
                                     isCompleted:
-                                        does.isCompleted == 1 ? 0 : 1)),
+                                        dones.isCompleted == 1 ? 0 : 1)),
+                                onLongPress: () => _showAddDialog(dones),
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 0, vertical: 8.0),
                                 leading: Checkbox(
                                     onChanged: (value) => model.updateTodo(
-                                        does.copy(isCompleted: value ? 1 : 0)),
+                                        dones.copy(isCompleted: value ? 1 : 0)),
                                     value:
-                                        does.isCompleted == 1 ? true : false),
+                                        dones.isCompleted == 1 ? true : false),
                                 trailing: IconButton(
                                   icon: Icon(Icons.delete_outline),
-                                  onPressed: () => model.removeTodo(does),
+                                  onPressed: () => model.removeTodo(dones),
                                 ),
                                 title: Text(
-                                  does.name,
+                                  dones.name,
                                   style: TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.w600,
-                                    color: does.isCompleted == 1
+                                    color: dones.isCompleted == 1
                                         ? _color
                                         : Colors.black54,
-                                    decoration: does.isCompleted == 1
+                                    decoration: dones.isCompleted == 1
                                         ? TextDecoration.lineThrough
                                         : TextDecoration.none,
                                   ),
@@ -286,6 +366,84 @@ class _DetailScreenState extends State<DetailScreen>
                   ),
                 ),
               ]),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void _showAddDialog(Todo todo) {
+    String taskName;
+    TextEditingController deadline = new TextEditingController();
+    // flutter defined function
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // return object of type Dialog
+        return AlertDialog(
+          content: Container(
+            padding: EdgeInsets.all(20),
+            constraints: BoxConstraints.expand(
+              height: 250,
+            ),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(13)),
+                color: Colors.white),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text("Edit Task"),
+                Container(
+                  child: TextField(
+                    controller: TextEditingController()..text = todo.name,
+                    onChanged: (text) => {taskName = text},
+                    decoration: InputDecoration(
+                      hintText: "Name of task",
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+                // Container(
+                //     child: TextField(
+                //       controller: deadline,
+                //       decoration: InputDecoration(
+                //         hintText: "Deadline",
+                //         enabledBorder: UnderlineInputBorder(
+                //       borderSide: BorderSide(color: Colors.white),
+                //       ),
+                //       ),
+                //     ),
+                // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    RaisedButton(
+                      color: Colors.red,
+                      child: Text("Cancel"),
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    RaisedButton(
+                      color: Colors.red,
+                      child: Text("Add"),
+                      onPressed: () {
+                        if (taskName != null) {
+                          model.updateTodo(todo.copy(name: taskName));
+                          // print(todo.name);
+                          // addTask(taskName.text, deadline.text);
+                          Navigator.pop(context);
+                        }
+                      },
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
         );
