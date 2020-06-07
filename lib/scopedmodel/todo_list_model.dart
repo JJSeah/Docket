@@ -121,17 +121,13 @@ class TodoListModel extends Model {
     var todos = this.todos.where((it) => it.parent == taskId);
     var totalTodos = todos.length;
 
-
     if (totalTodos == 0) {
       _taskCompletionPercentage[taskId] = 0;
     } else {
       var _todos = todos.where((it) => it.parent == taskId).toList();
-      print(_todos[0].name);
       var totalCompletedTodos = todos.where((it) => it.isCompleted == 1).length;
-      print(totalCompletedTodos);
       _taskCompletionPercentage[taskId] =
           (totalCompletedTodos / totalTodos * 100).toInt();
-               
     }
     // return todos.fold(0, (total, todo) => todo.isCompleted ? total + scoreOfTask : total);
   }
@@ -146,7 +142,6 @@ class TodoListModel extends Model {
       var totalCompletedTodos = todos.where((it) => it.isCompleted == 1).length;
       _taskLeft[taskId] = (totalTodos - totalCompletedTodos).toInt();
     }
-    
   }
 
   // Future<int> _syncTodoToDB() async {

@@ -29,6 +29,7 @@ class _DetailScreenState extends State<DetailScreen>
     with SingleTickerProviderStateMixin {
   AnimationController _controller;
   Animation<Offset> _animation;
+  TodoListModel model = TodoListModel();
 
   @override
   void initState() {
@@ -70,6 +71,7 @@ class _DetailScreenState extends State<DetailScreen>
         return Theme(
           data: ThemeData(primarySwatch: _color),
           child: Scaffold(
+            resizeToAvoidBottomInset: false, 
             backgroundColor: Colors.white,
             appBar: AppBar(
               elevation: 0,
@@ -165,24 +167,16 @@ class _DetailScreenState extends State<DetailScreen>
                           textInputAction: TextInputAction.done,
                           controller: textEditingController,
                           onSubmitted: (String s) {
-                            model.addTodo(Todo(
-                              s,
-                              parent: _task.id,
-                            ));
+                            if (s != "") {
+                              model.addTodo(Todo(
+                                s,
+                                parent: _task.id,
+                              ));
+                            }
                           },
                         ),
                       ),
                     ],
-                  ),
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 5.0),
-                  child: Text(
-                    "Todos",
-                    style: Theme.of(context)
-                        .textTheme
-                        .body1
-                        .copyWith(color: Colors.grey[500]),
                   ),
                 ),
                 Container(
@@ -228,35 +222,67 @@ class _DetailScreenState extends State<DetailScreen>
                           ),
                         );
                       },
-                      itemCount: _todos.length + 1,
+                      itemCount: _todos.length,
                     ),
                   ),
                 ),
                 Expanded(
-                  child: ListView.builder(
-                    itemCount: 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index == _todos.length) {
-                        return SizedBox(
-                          height: 56, // size of FAB
-                        );
-                      }
-                      return new ExpansionTile(
-                        title: new Text(
-                          "Dones",
-                          style: Theme.of(context)
-                              .textTheme
-                              .body1
-                              .copyWith(color: Colors.grey[500]),
+                  child: ExpansionTile(
+                    title: new Text(
+                      "Dones",
+                      style: Theme.of(context)
+                          .textTheme
+                          .body1
+                          .copyWith(color: Colors.grey[500]),
+                    ),
+                    children: <Widget>[
+                      Container(
+                        height: 114.27,
+                        child: ListView.builder(
+                          itemBuilder: (BuildContext context, int index) {
+                            if (index == _dones.length) {
+                              return SizedBox(
+                                height: 56, // size of FAB
+                              );
+                            }
+                            var does = _dones[index];
+                            return Container(
+                              padding: EdgeInsets.only(left: 22.0, right: 22.0),
+                              child: ListTile(
+                                onTap: () => model.updateTodo(does.copy(
+                                    isCompleted:
+                                        does.isCompleted == 1 ? 0 : 1)),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 0, vertical: 8.0),
+                                leading: Checkbox(
+                                    onChanged: (value) => model.updateTodo(
+                                        does.copy(isCompleted: value ? 1 : 0)),
+                                    value:
+                                        does.isCompleted == 1 ? true : false),
+                                trailing: IconButton(
+                                  icon: Icon(Icons.delete_outline),
+                                  onPressed: () => model.removeTodo(does),
+                                ),
+                                title: Text(
+                                  does.name,
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.w600,
+                                    color: does.isCompleted == 1
+                                        ? _color
+                                        : Colors.black54,
+                                    decoration: does.isCompleted == 1
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                          itemCount: _dones.length,
                         ),
-                        children: <Widget>[
-                          new Column(
-                            children: _buildExpandableContent(
-                                _dones[index], _color, _dones),
-                          ),
-                        ],
-                      );
-                    },
+                      ),
+                    ],
                   ),
                 ),
               ]),
@@ -265,40 +291,6 @@ class _DetailScreenState extends State<DetailScreen>
         );
       },
     );
-  }
-
-  _buildExpandableContent(Todo dones, _color, _dones) {
-    TodoListModel model;
-    List<Widget> columnContent = [];
-    // var dones = _dones[index];
-    for (Todo name in _dones)
-      columnContent.add(
-        new ListTile(
-          onTap: () => model.updateTodo(
-              dones.copy(isCompleted: dones.isCompleted == 1 ? 0 : 1)),
-          contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 8.0),
-          leading: Checkbox(
-              onChanged: (value) =>
-                  model.updateTodo(dones.copy(isCompleted: value ? 1 : 0)),
-              value: dones.isCompleted == 1 ? true : false),
-          trailing: IconButton(
-            icon: Icon(Icons.delete_outline),
-            onPressed: () => model.removeTodo(dones),
-          ),
-          title: Text(
-            name.name,
-            style: TextStyle(
-              fontSize: 18.0,
-              fontWeight: FontWeight.w600,
-              color: dones.isCompleted == 1 ? _color : Colors.black54,
-              decoration: dones.isCompleted == 1
-                  ? TextDecoration.lineThrough
-                  : TextDecoration.none,
-            ),
-          ),
-        ),
-      );
-    return columnContent;
   }
 
   @override
