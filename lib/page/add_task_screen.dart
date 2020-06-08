@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:todo/component/datepicker/date_picker_builder.dart';
 
 import 'package:todo/scopedmodel/todo_list_model.dart';
 import 'package:todo/model/task_model.dart';
@@ -21,6 +22,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   Color taskColor;
   IconData taskIcon;
+  IconData alarmIcon;
 
   @override
   void initState() {
@@ -29,6 +31,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       newTask = '';
       taskColor = ColorUtils.defaultColors[0];
       taskIcon = Icons.work;
+      alarmIcon = Icons.access_alarm;
     });
   }
 
@@ -100,6 +103,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                         highlightColor: taskColor,
                         action: (newIcon) =>
                             setState(() => taskIcon = newIcon)),
+                    Container(
+                      width: 22.0,
+                    ),
+                    DatePickerBuilder(
+                      iconData: alarmIcon,
+                      highlightColor: taskColor,
+                      action: (i) => setState(() => taskIcon = i),
+                    ),
                   ],
                 ),
               ],
@@ -124,11 +135,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     Scaffold.of(context).showSnackBar(snackBar);
                     // _scaffoldKey.currentState.showSnackBar(snackBar);
                   } else {
-                    model.addTask(Task(
-                      newTask,
-                      codePoint: taskIcon.codePoint,
-                      color: taskColor.value
-                    ));
+                    model.addTask(Task(newTask,
+                        codePoint: taskIcon.codePoint, color: taskColor.value));
                     Navigator.pop(context);
                   }
                 },

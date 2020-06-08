@@ -24,7 +24,7 @@ class MyApp extends StatelessWidget {
       title: 'Todo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        dialogBackgroundColor: Colors.transparent,
+        // dialogBackgroundColor: Colors.transparent,
         primarySwatch: Colors.deepPurple,
         textTheme: TextTheme(
           headline: TextStyle(fontSize: 32.0, fontWeight: FontWeight.w400),

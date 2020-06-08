@@ -23,6 +23,9 @@ class IconPickerBuilder extends StatelessWidget {
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
+              shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(13.0))),
+              backgroundColor: Colors.white,
               title: Text('Select an icon'),
               content: SingleChildScrollView(
                 child: IconPicker(

@@ -77,6 +77,8 @@ class _DetailScreenState extends State<DetailScreen>
             builder: (BuildContext context) {
               // return object of type Dialog
               return AlertDialog(
+                shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(13.0))),
                 content: Container(
                   padding: EdgeInsets.all(20),
                   constraints: BoxConstraints.expand(
