@@ -4,7 +4,7 @@
   <br>
   <a href=""><img src="https://lh3.googleusercontent.com/WoCgEV-IoxkLTozlfqpxKr_uRTQ7jPFEetLWLTgIVTB4YcrPFpj4LpD9q4XD7Ij2Hos=s360" alt="Todo" width="200"></a>
   <br>
-  Todo - Simple & Beautiful
+  Docket
   <br>
 </h1>
 
@@ -28,7 +28,8 @@
 
 * Easily add and remove tasks
 * Organize tasks under categories. editing.
-* Personalize task category using color and icon. 
+* Personalize task category using color and icon.
+* Set reminders to stay on track. 
 
 ## How To Use
 
@@ -48,14 +49,6 @@ $ flutter packages get
 $ flutter run
 ```
 
-## Download
-
-You can [download](https://play.google.com/store/apps/details?id=com.queenstech.todo) the latest installable version of Todo for Android.
-
- <a href="https://play.google.com/store/apps/details?id=com.queenstech.todo"><img src="https://play.google.com/intl/en_us/badges/images/generic/ne_badge_web_generic.png" width="250"></a>
-
-
-
 ## Credits
 - [Design Inspiration](https://goo.gl/Y5rd7L)
 
@@ -64,7 +57,7 @@ You can [download](https://play.google.com/store/apps/details?id=com.queenstech.
 MIT
 
 ---
-
-> GitHub [@sabinbajracharya](https://github.com/sabinbajracharya) &nbsp;&middot;&nbsp;
-> Instagram [@er_sabin](https://www.instagram.com/er_sabin/)
+> [Website](jjseah.ml)&nbsp;&middot;&nbsp;
+> GitHub [@JJSEAH](https://github.com/JJSeah) &nbsp;&middot;&nbsp;
+> Instagram [@JJSEAH_](https://www.instagram.com/jjseah_/)
 
