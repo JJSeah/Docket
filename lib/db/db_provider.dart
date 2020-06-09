@@ -53,7 +53,9 @@ class DBProvider {
           "id TEXT PRIMARY KEY,"
           "name TEXT,"
           "color INTEGER,"
-          "code_point INTEGER"
+          "code_point INTEGER,"
+          "date TEXT,"
+          "time TEXT"
           ")");
       await db.execute("CREATE TABLE Todo ("
           "id TEXT PRIMARY KEY,"

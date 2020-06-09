@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:todo/component/datepicker/date_picker_builder.dart';
 
@@ -23,15 +24,26 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   Color taskColor;
   IconData taskIcon;
   IconData alarmIcon;
+  IconData successIcon;
+  String date;
+  String time;
+    void adddatetime(String x){
+    print(x);
+    x = date;
+    print(x);
+  }
 
   @override
   void initState() {
     super.initState();
     setState(() {
       newTask = '';
+      date = '';
+      time = '';
       taskColor = ColorUtils.defaultColors[0];
       taskIcon = Icons.work;
-      alarmIcon = Icons.access_alarm;
+      alarmIcon = Icons.add_alarm;
+      successIcon = Icons.access_alarm;
     });
   }
 
@@ -109,7 +121,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     DatePickerBuilder(
                       iconData: alarmIcon,
                       highlightColor: taskColor,
-                      action: (i) => setState(() => taskIcon = i),
+                      pickedDate: (i) => setState(() => date = DateFormat('dd-MM-yyyy').format(i)),
+                      pickedTime: (i) => setState(() => time = DateFormat('HH:mm').format(i)),
                     ),
                   ],
                 ),
@@ -135,8 +148,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     Scaffold.of(context).showSnackBar(snackBar);
                     // _scaffoldKey.currentState.showSnackBar(snackBar);
                   } else {
-                    model.addTask(Task(newTask,
-                        codePoint: taskIcon.codePoint, color: taskColor.value));
+                    model.addTask(Task(
+                      newTask, codePoint: taskIcon.codePoint, color: taskColor.value,date: date, time: time));
                     Navigator.pop(context);
                   }
                 },
