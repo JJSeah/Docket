@@ -29,7 +29,7 @@
 * Easily add and remove tasks
 * Organize tasks under categories. editing.
 * Personalize task category using color and icon.
-* Set reminders to stay on track. 
+* Set reminders to stay on track with notifications. 
 
 ## How To Use
 
