@@ -27,11 +27,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   IconData successIcon;
   String date;
   String time;
-    void adddatetime(String x){
-    print(x);
-    x = date;
-    print(x);
-  }
 
   @override
   void initState() {
@@ -121,8 +116,8 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     DatePickerBuilder(
                       iconData: alarmIcon,
                       highlightColor: taskColor,
-                      pickedDate: (i) => setState(() => date = DateFormat('dd-MM-yyyy').format(i)),
-                      pickedTime: (i) => setState(() => time = DateFormat('HH:mm').format(i)),
+                      pickedDate: (i) => setState(() => date = DateFormat('yyyyMMdd').format(i)),
+                      pickedTime: (i) => setState(() => time = DateFormat('HH:mm:ss').format(i)),
                     ),
                   ],
                 ),
@@ -149,7 +144,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     // _scaffoldKey.currentState.showSnackBar(snackBar);
                   } else {
                     model.addTask(Task(
-                      newTask, codePoint: taskIcon.codePoint, color: taskColor.value,date: date, time: time));
+                      newTask, codePoint: taskIcon.codePoint, color: taskColor.value, date: date.toString(), time: time.toString()));
                     Navigator.pop(context);
                   }
                 },

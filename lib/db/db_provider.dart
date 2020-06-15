@@ -14,17 +14,39 @@ class DBProvider {
   static final DBProvider db = DBProvider._();
 
   var todos = [
-    Todo("Vegetables", parent: '1',),
-    Todo("Birthday gift", parent: '1',),
+    Todo(
+      "Vegetables",
+      parent: '1',
+    ),
+    Todo(
+      "Birthday gift",
+      parent: '1',
+    ),
     Todo("Chocolate cookies", parent: '1', isCompleted: 1),
-    Todo("20 pushups", parent: '2',),
-    Todo("Tricep", parent: '2',),
-    Todo("15 burpees (3 sets)", parent: '2',),
+    Todo(
+      "20 pushups",
+      parent: '2',
+    ),
+    Todo(
+      "Tricep",
+      parent: '2',
+    ),
+    Todo(
+      "15 burpees (3 sets)",
+      parent: '2',
+    ),
   ];
 
   var tasks = [
-    Task('Shopping', id: '1',  color: Colors.purple.value, codePoint: Icons.shopping_cart.codePoint),
-    Task('Workout', id: '2', color: Colors.pink.value, codePoint: Icons.fitness_center.codePoint),
+    Task('Shopping',
+        id: '1',
+        color: Colors.purple.value,
+        codePoint: Icons.shopping_cart.codePoint,
+        date: "14-06-2020"),
+    Task('Workout',
+        id: '2',
+        color: Colors.pink.value,
+        codePoint: Icons.fitness_center.codePoint),
   ];
 
   Future<Database> get database async {
@@ -45,9 +67,8 @@ class DBProvider {
 
   initDB() async {
     String path = await _dbPath;
-    return await openDatabase(path, version: 1, onOpen: (db) {
-
-    }, onCreate: (Database db, int version) async {
+    return await openDatabase(path, version: 1, onOpen: (db) {},
+        onCreate: (Database db, int version) async {
       print("DBProvider:: onCreate()");
       await db.execute("CREATE TABLE Task ("
           "id TEXT PRIMARY KEY,"
@@ -125,6 +146,7 @@ class DBProvider {
 
   Future<int> updateTask(Task task) async {
     final db = await database;
+    print(task.toJson());
     return db
         .update('Task', task.toJson(), where: 'id = ?', whereArgs: [task.id]);
   }

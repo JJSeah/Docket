@@ -9,11 +9,17 @@ class DatePickerBuilder extends StatelessWidget {
   final ValueChanged<DateTime> pickedDate;
   final ValueChanged<DateTime> pickedTime;
   final Color highlightColor;
+  String dates;
+  TextEditingController date = new TextEditingController();
+  TextEditingController time = new TextEditingController();
 
   DatePickerBuilder({
     @required this.iconData,
     @required this.pickedDate,
     @required this.pickedTime,
+    @required this.dates,
+    @required this.date,
+    @required this.time,
     Color highlightColor,
   }) : this.highlightColor = highlightColor;
 
@@ -22,6 +28,13 @@ class DatePickerBuilder extends StatelessWidget {
     //https://stackoverflow.com/questions/45424621/inkwell-not-showing-ripple-effect
     final format = DateFormat("EEE, d MMM yyyy");
     final tformat = DateFormat("HH:mm");
+    try {
+      date = new TextEditingController(
+          text: DateFormat('EEE, d MMM yyyy').format(DateTime.parse(dates)));
+      time = new TextEditingController(
+          text: DateFormat('HH:mm').format(DateTime.parse(dates)));
+    } catch (e) {}
+
     GlobalKey<FormState> _formKey;
     return ClipOval(
       child: Container(
@@ -36,89 +49,100 @@ class DatePickerBuilder extends StatelessWidget {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(Radius.circular(13.0))),
                     content: Container(
-                      constraints: BoxConstraints.expand(
-                        height: 250,
-                      ),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.all(Radius.circular(13)),
-                          color: Colors.white),
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          Text("Add Reminder"),
-                          Container(
-                            child: DateTimeField(
-                              onChanged: pickedDate,
-                              format: format,
-                              decoration: InputDecoration(
-                                  labelText: 'Date',
-                                  hasFloatingPlaceholder: false),
-                              onShowPicker: (context, currentValue) async {
-                                final date = await showDatePicker(
-                                    context: context,
-                                    firstDate: DateTime(2020),
-                                    initialDate:
-                                        currentValue ?? new DateTime.now(),
-                                    lastDate: DateTime(2100));
-                                return (date);
-                              },
-                            ),
-                          ),
-                          Container(
-                            child: DateTimeField(
-                              onChanged: pickedTime,
-                              format: tformat,
-                              decoration: InputDecoration(
-                                  labelText: 'Time',
-                                  hasFloatingPlaceholder: false),
-                              onShowPicker: (context, tcurrentValue) async {
-                                final time = await showTimePicker(
-                                  context: context,
-                                  initialTime: TimeOfDay.fromDateTime(
-                                      tcurrentValue ?? DateTime.now()),
-                                );
-                                return DateTimeField.convert(time);
-                              },
-                            ),
-                          ),
-                          Row(
+                        constraints: BoxConstraints.expand(
+                          height: 250,
+                        ),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(13)),
+                            color: Colors.white),
+                        child: Form(
+                          key: _formKey,
+                          child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              RaisedButton(
-                                color: highlightColor,
-                                child: Text(
-                                  "Cancel",
-                                  style: TextStyle(color: Colors.white),
+                              Text("Add Reminder"),
+                              Container(
+                                child: DateTimeField(
+                                  onChanged: pickedDate,
+                                  format: format,
+                                  controller: date,
+                                  decoration: InputDecoration(
+                                      labelText: 'Date',
+                                      hasFloatingPlaceholder: false),
+                                  onShowPicker: (context, currentValue) async {
+                                    final date = await showDatePicker(
+                                      context: context,
+                                      firstDate: DateTime(2020),
+                                      initialDate:
+                                          currentValue ?? new DateTime.now(),
+                                      lastDate: DateTime(2100),
+                                      builder:
+                                          (BuildContext context, Widget child) {
+                                        return Theme(
+                                          data: ThemeData.light().copyWith(
+                                            primaryColor: highlightColor,
+                                            accentColor: highlightColor,
+                                            colorScheme: ColorScheme.light(
+                                                primary: highlightColor),
+                                            buttonTheme: ButtonThemeData(
+                                                textTheme:
+                                                    ButtonTextTheme.primary),
+                                          ),
+                                          child: child,
+                                        );
+                                      },
+                                    );
+                                    return (date);
+                                  },
                                 ),
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
                               ),
-                              RaisedButton(
-                                color: highlightColor,
-                                child: Text("Add",
-                                    style: TextStyle(color: Colors.white)),
-                                onPressed: () {
-                                  if (pickedDate != null) {
-                                    if (pickedTime != null) {
-                                      print(pickedDate);
-                                      print(pickedTime);
+                              Container(
+                                child: DateTimeField(
+                                  onChanged: pickedTime,
+                                  format: tformat,
+                                  controller: time,
+                                  decoration: InputDecoration(
+                                      labelText: 'Time',
+                                      hasFloatingPlaceholder: false),
+                                  onShowPicker: (context, tcurrentValue) async {
+                                    final time = await showTimePicker(
+                                      context: context,
+                                      initialTime: TimeOfDay.fromDateTime(
+                                          tcurrentValue ?? DateTime.now()),
+                                    );
+                                    return DateTimeField.convert(time);
+                                  },
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  RaisedButton(
+                                    color: highlightColor,
+                                    child: Text(
+                                      "Cancel",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () {
                                       Navigator.pop(context);
-                                    }
-                                  }
-                                },
-                              ),
+                                    },
+                                  ),
+                                  RaisedButton(
+                                    color: highlightColor,
+                                    child: Text("Confirm",
+                                        style: TextStyle(color: Colors.white)),
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                  ),
+                                ],
+                              )
                             ],
-                          )
-                        ],
-                      ),
-                      )
-                      
-                    ),
+                          ),
+                        )),
                   );
                 },
               );

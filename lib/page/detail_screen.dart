@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:todo/model/todo_model.dart';
 
@@ -67,7 +68,15 @@ class _DetailScreenState extends State<DetailScreen>
         var _hero = widget.heroIds;
         var _color = ColorUtils.getColorFrom(id: _task.color);
         var _icon = IconData(_task.codePoint, fontFamily: 'MaterialIcons');
-
+        var _datetime;
+        var _date;
+        try{
+          _datetime = _task.date +" "+_task.time;
+          _date = DateFormat('dd MMM, HH:MM').format(DateTime.parse(_datetime));
+        }
+        catch(e){
+          _date = " ";
+        }
         void _showAddDialog(Todo todo) {
           String taskName;
           TextEditingController deadline = new TextEditingController();
@@ -159,6 +168,16 @@ class _DetailScreenState extends State<DetailScreen>
               brightness: Brightness.light,
               backgroundColor: Colors.white,
               actions: [
+                Container(
+                        margin: EdgeInsets.only(top: 22.0,right: 8.0),
+                        child: Text(
+                            "$_date",
+                            style: Theme.of(context)
+                                .textTheme
+                                .body1
+                                .copyWith(color: Colors.grey[500]),
+                          ),
+                      ),
                 IconButton(
                   icon: Icon(Icons.edit),
                   color: _color,
@@ -171,6 +190,7 @@ class _DetailScreenState extends State<DetailScreen>
                           taskName: _task.name,
                           icon: _icon,
                           color: _color,
+                          dated: _datetime,
                         ),
                       ),
                     );

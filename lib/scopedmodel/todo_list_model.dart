@@ -66,7 +66,6 @@ class TodoListModel extends Model {
     _calTaskLeft(task.id);
     _db.insertTask(task);
     notifyListeners();
-    print(task.date);
   }
 
   void removeTask(Task task) {

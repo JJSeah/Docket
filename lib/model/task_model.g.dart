@@ -10,6 +10,8 @@ Task _$TaskFromJson(Map<String, dynamic> json) {
   return Task(json['name'] as String,
       color: json['color'] as int,
       codePoint: json['code_point'] as int,
+      date: json['date'] as String,
+      time: json['time'] as String,
       id: json['id'] as String);
 }
 
@@ -17,5 +19,7 @@ Map<String, dynamic> _$TaskToJson(Task instance) => <String, dynamic>{
       'id': instance.id,
       'name': instance.name,
       'color': instance.color,
-      'code_point': instance.codePoint
+      'code_point': instance.codePoint,
+      'date': instance.date,
+      'time': instance.time
     };

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:todo/component/datepicker/date_picker_builder.dart';
 
 import 'package:todo/scopedmodel/todo_list_model.dart';
 import 'package:todo/model/task_model.dart';
@@ -11,13 +13,14 @@ class EditTaskScreen extends StatefulWidget {
   final String taskName;
   final Color color;
   final IconData icon;
+  final String dated;
 
-  EditTaskScreen({
-    @required this.taskId
-  , @required this.taskName
-  , @required this.color
-  , @required this.icon
-  });
+  EditTaskScreen(
+      {@required this.taskId,
+      @required this.taskName,
+      @required this.color,
+      @required this.dated,
+      @required this.icon});
 
   @override
   State<StatefulWidget> createState() {
@@ -26,10 +29,14 @@ class EditTaskScreen extends StatefulWidget {
 }
 
 class _EditCardScreenState extends State<EditTaskScreen> {
-  final  btnSaveTitle = "Save Changes";
+  final btnSaveTitle = "Save Changes";
   String newTask;
   Color taskColor;
   IconData taskIcon;
+  IconData alarmIcon;
+  String date;
+  String time;
+  DateTime test;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -37,9 +44,13 @@ class _EditCardScreenState extends State<EditTaskScreen> {
   void initState() {
     super.initState();
     setState(() {
+      test =  (DateTime.parse("2012-02-27 13:27:00"));
+      date = widget.dated;
+      time = '';
       newTask = widget.taskName;
       taskColor = widget.color;
       taskIcon = widget.icon;
+      alarmIcon = Icons.add_alarm;
     });
   }
 
@@ -112,6 +123,18 @@ class _EditCardScreenState extends State<EditTaskScreen> {
                         highlightColor: taskColor,
                         action: (newIcon) =>
                             setState(() => taskIcon = newIcon)),
+                    Container(
+                      width: 22.0,
+                    ),
+                    DatePickerBuilder(
+                      iconData: alarmIcon,
+                      highlightColor: taskColor,
+                      dates: date,
+                      pickedDate: (i) => 
+                       setState(() => date = (DateFormat('yyyyMMdd').format(i ?? test))),
+                      pickedTime: (i) => setState(
+                          () => time = (DateFormat('HH:mm:ss').format(i ?? test))),
+                    ),
                   ],
                 ),
               ],
@@ -136,12 +159,17 @@ class _EditCardScreenState extends State<EditTaskScreen> {
                     Scaffold.of(context).showSnackBar(snackBar);
                     // _scaffoldKey.currentState.showSnackBar(snackBar);
                   } else {
-                    model.updateTask(Task(
-                      newTask,
-                      codePoint: taskIcon.codePoint,
-                      color: taskColor.value,
-                      id: widget.taskId
-                    ));
+                    if (date == "20120227") {
+                      date = null;
+                      time = null;
+                    }
+                    if (time == "") {
+                      time = DateFormat('HH:mm').format(DateTime.parse(widget.dated));
+                    }
+                    model.updateTask(Task(newTask,
+                        codePoint: taskIcon.codePoint,
+                        color: taskColor.value,
+                        id: widget.taskId, date: date, time: time));
                     Navigator.pop(context);
                   }
                 },
