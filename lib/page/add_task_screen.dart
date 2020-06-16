@@ -1,13 +1,17 @@
+import 'package:Docket/page/detail_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:todo/component/datepicker/date_picker_builder.dart';
+import 'package:Docket/component/datepicker/date_picker_builder.dart';
 
-import 'package:todo/scopedmodel/todo_list_model.dart';
-import 'package:todo/model/task_model.dart';
-import 'package:todo/component/iconpicker/icon_picker_builder.dart';
-import 'package:todo/component/colorpicker/color_picker_builder.dart';
-import 'package:todo/utils/color_utils.dart';
+import 'package:Docket/scopedmodel/todo_list_model.dart';
+import 'package:Docket/model/task_model.dart';
+import 'package:Docket/component/iconpicker/icon_picker_builder.dart';
+import 'package:Docket/component/colorpicker/color_picker_builder.dart';
+import 'package:Docket/utils/color_utils.dart';
+
+import '../main.dart';
 
 class AddTaskScreen extends StatefulWidget {
   AddTaskScreen();
@@ -27,10 +31,13 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   IconData successIcon;
   String date;
   String time;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   @override
   void initState() {
     super.initState();
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    initializeNotifications();
     setState(() {
       newTask = '';
       date = '';
@@ -116,8 +123,10 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     DatePickerBuilder(
                       iconData: alarmIcon,
                       highlightColor: taskColor,
-                      pickedDate: (i) => setState(() => date = DateFormat('yyyyMMdd').format(i)),
-                      pickedTime: (i) => setState(() => time = DateFormat('HH:mm:ss').format(i)),
+                      pickedDate: (i) => setState(
+                          () => date = DateFormat('yyyyMMdd').format(i)),
+                      pickedTime: (i) => setState(
+                          () => time = DateFormat('HH:mm:ss').format(i)),
                     ),
                   ],
                 ),
@@ -143,8 +152,16 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                     Scaffold.of(context).showSnackBar(snackBar);
                     // _scaffoldKey.currentState.showSnackBar(snackBar);
                   } else {
-                    model.addTask(Task(
-                      newTask, codePoint: taskIcon.codePoint, color: taskColor.value, date: date.toString(), time: time.toString()));
+                    scheduleNotification(Task(newTask,
+                        codePoint: taskIcon.codePoint,
+                        color: taskColor.value,
+                        date: date.toString(),
+                        time: time.toString()));
+                    model.addTask(Task(newTask,
+                        codePoint: taskIcon.codePoint,
+                        color: taskColor.value,
+                        date: date.toString(),
+                        time: time.toString()));
                     Navigator.pop(context);
                   }
                 },
@@ -155,6 +172,49 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       },
     );
   }
+
+  initializeNotifications() async {
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+    await Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) => MyHomePage()),
+    );
+  }
+
+  Future<void> scheduleNotification(Task task) async {
+    DateTime scheduledNotificationDateTime;
+    if (date != null) {
+      try {
+        print(time);
+        var _datetime = date + " " + time;
+        scheduledNotificationDateTime = (DateTime.parse(_datetime));
+      } catch (e) {
+        print("failure");
+      }
+      var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+          'your other channel id',
+          'your other channel name',
+          'your other channel description');
+      var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+      NotificationDetails platformChannelSpecifics = NotificationDetails(
+          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.schedule(0, newTask, 'Reminder',
+          scheduledNotificationDateTime, platformChannelSpecifics);
+    }
+  }
 }
+
 // Reason for wraping fab with builder (to get scafold context)
 // https://stackoverflow.com/a/52123080/4934757

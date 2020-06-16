@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:todo/model/todo_model.dart';
+import 'package:Docket/model/todo_model.dart';
 
-import 'package:todo/scopedmodel/todo_list_model.dart';
-import 'package:todo/gradient_background.dart';
-import 'package:todo/task_progress_indicator.dart';
-import 'package:todo/page/add_task_screen.dart';
-import 'package:todo/model/hero_id_model.dart';
-import 'package:todo/model/task_model.dart';
-import 'package:todo/route/scale_route.dart';
-import 'package:todo/utils/color_utils.dart';
-import 'package:todo/utils/datetime_utils.dart';
-import 'package:todo/page/detail_screen.dart';
-import 'package:todo/component/todo_badge.dart';
-import 'package:todo/model/data/choice_card.dart';
+import 'package:Docket/scopedmodel/todo_list_model.dart';
+import 'package:Docket/gradient_background.dart';
+import 'package:Docket/task_progress_indicator.dart';
+import 'package:Docket/page/add_task_screen.dart';
+import 'package:Docket/model/hero_id_model.dart';
+import 'package:Docket/model/task_model.dart';
+import 'package:Docket/route/scale_route.dart';
+import 'package:Docket/utils/color_utils.dart';
+import 'package:Docket/utils/datetime_utils.dart';
+import 'package:Docket/page/detail_screen.dart';
+import 'package:Docket/component/todo_badge.dart';
+import 'package:Docket/model/data/choice_card.dart';
 
 void main() => runApp(MyApp());
 

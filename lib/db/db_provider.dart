@@ -4,8 +4,8 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
-import 'package:todo/model/todo_model.dart';
-import 'package:todo/model/task_model.dart';
+import 'package:Docket/model/todo_model.dart';
+import 'package:Docket/model/task_model.dart';
 
 class DBProvider {
   static Database _database;

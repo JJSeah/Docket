@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo/component/todo_badge.dart';
+import 'package:Docket/component/todo_badge.dart';
 
 class IconPicker extends StatefulWidget {
   final ValueChanged<IconData> onIconChanged;

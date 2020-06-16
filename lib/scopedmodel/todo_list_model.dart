@@ -5,9 +5,9 @@ import 'package:scoped_model/scoped_model.dart';
 
 // import 'package:objectdb/objectdb.dart';
 
-import 'package:todo/model/todo_model.dart';
-import 'package:todo/model/task_model.dart';
-import 'package:todo/db/db_provider.dart';
+import 'package:Docket/model/todo_model.dart';
+import 'package:Docket/model/task_model.dart';
+import 'package:Docket/db/db_provider.dart';
 
 class TodoListModel extends Model {
   // ObjectDB db;

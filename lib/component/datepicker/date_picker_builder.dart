@@ -1,8 +1,8 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:todo/component/todo_badge.dart';
-import 'package:todo/page/add_task_screen.dart';
+import 'package:Docket/component/todo_badge.dart';
+import 'package:Docket/page/add_task_screen.dart';
 
 class DatePickerBuilder extends StatelessWidget {
   final IconData iconData;
@@ -110,6 +110,21 @@ class DatePickerBuilder extends StatelessWidget {
                                       context: context,
                                       initialTime: TimeOfDay.fromDateTime(
                                           tcurrentValue ?? DateTime.now()),
+                                      builder:
+                                          (BuildContext context, Widget child) {
+                                        return Theme(
+                                          data: ThemeData.light().copyWith(
+                                            primaryColor: highlightColor,
+                                            accentColor: highlightColor,
+                                            colorScheme: ColorScheme.light(
+                                                primary: highlightColor),
+                                            buttonTheme: ButtonThemeData(
+                                                textTheme:
+                                                    ButtonTextTheme.primary),
+                                          ),
+                                          child: child,
+                                        );
+                                      },
                                     );
                                     return DateTimeField.convert(time);
                                   },

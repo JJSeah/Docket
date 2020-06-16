@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:todo/model/todo_model.dart';
+import 'package:Docket/model/todo_model.dart';
 
-import 'package:todo/scopedmodel/todo_list_model.dart';
-import 'package:todo/task_progress_indicator.dart';
-import 'package:todo/component/todo_badge.dart';
-import 'package:todo/model/hero_id_model.dart';
-import 'package:todo/model/task_model.dart';
-import 'package:todo/utils/color_utils.dart';
-import 'package:todo/page/edit_task_screen.dart';
+import 'package:Docket/scopedmodel/todo_list_model.dart';
+import 'package:Docket/task_progress_indicator.dart';
+import 'package:Docket/component/todo_badge.dart';
+import 'package:Docket/model/hero_id_model.dart';
+import 'package:Docket/model/task_model.dart';
+import 'package:Docket/utils/color_utils.dart';
+import 'package:Docket/page/edit_task_screen.dart';
 
 class DetailScreen extends StatefulWidget {
   final String taskId;
@@ -71,8 +71,9 @@ class _DetailScreenState extends State<DetailScreen>
         var _datetime;
         var _date;
         try{
+          print(_task.time);
           _datetime = _task.date +" "+_task.time;
-          _date = DateFormat('dd MMM, HH:MM').format(DateTime.parse(_datetime));
+          _date = DateFormat('dd MMM, hh:mm').format(DateTime.parse(_datetime));
         }
         catch(e){
           _date = " ";
@@ -113,17 +114,6 @@ class _DetailScreenState extends State<DetailScreen>
                           ),
                         ),
                       ),
-                      // Container(
-                      //     child: TextField(
-                      //       controller: deadline,
-                      //       decoration: InputDecoration(
-                      //         hintText: "Deadline",
-                      //         enabledBorder: UnderlineInputBorder(
-                      //       borderSide: BorderSide(color: Colors.white),
-                      //       ),
-                      //       ),
-                      //     ),
-                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         crossAxisAlignment: CrossAxisAlignment.center,

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-import 'package:todo/utils/uuid.dart';
+import 'package:Docket/utils/uuid.dart';
 
 part 'task_model.g.dart';
 

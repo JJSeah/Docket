@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:scoped_model/scoped_model.dart';
-import 'package:todo/component/datepicker/date_picker_builder.dart';
+import 'package:Docket/component/datepicker/date_picker_builder.dart';
 
-import 'package:todo/scopedmodel/todo_list_model.dart';
-import 'package:todo/model/task_model.dart';
-import 'package:todo/component/iconpicker/icon_picker_builder.dart';
-import 'package:todo/component/colorpicker/color_picker_builder.dart';
+import 'package:Docket/scopedmodel/todo_list_model.dart';
+import 'package:Docket/model/task_model.dart';
+import 'package:Docket/component/iconpicker/icon_picker_builder.dart';
+import 'package:Docket/component/colorpicker/color_picker_builder.dart';
+
+import '../main.dart';
 
 class EditTaskScreen extends StatefulWidget {
   final String taskId;
@@ -37,14 +40,17 @@ class _EditCardScreenState extends State<EditTaskScreen> {
   String date;
   String time;
   DateTime test;
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
+    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+    initializeNotifications();
     super.initState();
     setState(() {
-      test =  (DateTime.parse("2012-02-27 13:27:00"));
+      test = (DateTime.parse("2012-02-27 13:27:00"));
       date = widget.dated;
       time = '';
       newTask = widget.taskName;
@@ -130,10 +136,10 @@ class _EditCardScreenState extends State<EditTaskScreen> {
                       iconData: alarmIcon,
                       highlightColor: taskColor,
                       dates: date,
-                      pickedDate: (i) => 
-                       setState(() => date = (DateFormat('yyyyMMdd').format(i ?? test))),
-                      pickedTime: (i) => setState(
-                          () => time = (DateFormat('HH:mm:ss').format(i ?? test))),
+                      pickedDate: (i) => setState(() =>
+                          date = (DateFormat('yyyyMMdd').format(i ?? test))),
+                      pickedTime: (i) => setState(() =>
+                          time = (DateFormat('HH:mm:ss').format(i ?? test))),
                     ),
                   ],
                 ),
@@ -164,12 +170,21 @@ class _EditCardScreenState extends State<EditTaskScreen> {
                       time = null;
                     }
                     if (time == "") {
-                      time = DateFormat('HH:mm').format(DateTime.parse(widget.dated));
+                      time = DateFormat('HH:mm')
+                          .format(DateTime.parse(widget.dated));
                     }
+                    scheduleNotification(Task(newTask,
+                        codePoint: taskIcon.codePoint,
+                        color: taskColor.value,
+                         id: widget.taskId,
+                        date: date.toString(),
+                        time: time.toString()));
                     model.updateTask(Task(newTask,
                         codePoint: taskIcon.codePoint,
                         color: taskColor.value,
-                        id: widget.taskId, date: date, time: time));
+                        id: widget.taskId,
+                        date: date,
+                        time: time));
                     Navigator.pop(context);
                   }
                 },
@@ -179,6 +194,47 @@ class _EditCardScreenState extends State<EditTaskScreen> {
         );
       },
     );
+  }
+initializeNotifications() async {
+    var initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettingsIOS = IOSInitializationSettings();
+    var initializationSettings = InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: onSelectNotification);
+  }
+
+  Future onSelectNotification(String payload) async {
+    if (payload != null) {
+      debugPrint('notification payload: ' + payload);
+    }
+    await Navigator.push(
+      context,
+      new MaterialPageRoute(builder: (context) =>  MyHomePage()),
+    );
+  }
+
+  Future<void> scheduleNotification(Task task) async {
+    DateTime scheduledNotificationDateTime;
+    if (date != null) {
+      try {
+        print(time);
+        var _datetime = date + " " + time;
+        scheduledNotificationDateTime = (DateTime.parse(_datetime));
+      } catch (e) {
+        print("failure");
+      }
+      var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+          'your other channel id',
+          'your other channel name',
+          'your other channel description');
+      var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+      NotificationDetails platformChannelSpecifics = NotificationDetails(
+          androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+      await flutterLocalNotificationsPlugin.schedule(0, newTask, 'Reminder',
+          scheduledNotificationDateTime, platformChannelSpecifics);
+    }
   }
 }
 
