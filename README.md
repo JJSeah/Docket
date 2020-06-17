@@ -2,7 +2,7 @@
 
 <h1 align="center">
   <br>
-  <a href=""><img src="https://lh3.googleusercontent.com/WoCgEV-IoxkLTozlfqpxKr_uRTQ7jPFEetLWLTgIVTB4YcrPFpj4LpD9q4XD7Ij2Hos=s360" alt="Todo" width="200"></a>
+  <a href=""><img src="screenshots/docket.png" alt="Docket" width="200"></a>
   <br>
   Docket
   <br>
@@ -18,16 +18,18 @@
 </p>
 
 <p float="left">
-  <img src="screenshots/screen01.png" width="200" />
-  <img src="screenshots/screen02.png" width="200" /> 
-  <img src="screenshots/screen03.png" width="200" />
-  <img src="screenshots/screen04.png" width="200" />
+  <img src="screenshots/screen01.png" width="175" />
+  <img src="screenshots/screen02.png" width="175" /> 
+  <img src="screenshots/screen03.png" width="175" />
+  <img src="screenshots/screen04.png" width="175" />
+  <img src="screenshots/screen05.png" width="175" />
 </p>
 
 ## Key Features
 
-* Easily add and remove tasks
-* Organize tasks under categories. editing.
+* Easily add and remove tasks.
+* Pres and hold to edit todos.
+* Organize tasks under categories.
 * Personalize task category using color and icon.
 * Set reminders to stay on track with notifications. 
 
@@ -37,7 +39,7 @@ To clone and run this application, you'll need [Git](https://git-scm.com) and [F
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/sabinbajracharya/fluttery-todo.git
+$ git clone https://github.com/jjseah/docket.git
 
 # Go into the repository
 $ cd fluttery-todo

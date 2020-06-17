@@ -169,22 +169,29 @@ class _EditCardScreenState extends State<EditTaskScreen> {
                       date = null;
                       time = null;
                     }
-                    if (time == "") {
-                      time = DateFormat('HH:mm')
-                          .format(DateTime.parse(widget.dated));
+                    if (date == null) {
+                      model.updateTask(Task(newTask,
+                          codePoint: taskIcon.codePoint,
+                          color: taskColor.value,
+                          id: widget.taskId));
+                    } else {
+                      if (time == "") {
+                        time = DateFormat('HH:mm')
+                            .format(DateTime.parse(widget.dated));
+                      }
+                      scheduleNotification(Task(newTask,
+                          codePoint: taskIcon.codePoint,
+                          color: taskColor.value,
+                          id: widget.taskId,
+                          date: date.toString(),
+                          time: time.toString()));
+                      model.updateTask(Task(newTask,
+                          codePoint: taskIcon.codePoint,
+                          color: taskColor.value,
+                          id: widget.taskId,
+                          date: date,
+                          time: time));
                     }
-                    scheduleNotification(Task(newTask,
-                        codePoint: taskIcon.codePoint,
-                        color: taskColor.value,
-                         id: widget.taskId,
-                        date: date.toString(),
-                        time: time.toString()));
-                    model.updateTask(Task(newTask,
-                        codePoint: taskIcon.codePoint,
-                        color: taskColor.value,
-                        id: widget.taskId,
-                        date: date,
-                        time: time));
                     Navigator.pop(context);
                   }
                 },
@@ -195,7 +202,8 @@ class _EditCardScreenState extends State<EditTaskScreen> {
       },
     );
   }
-initializeNotifications() async {
+
+  initializeNotifications() async {
     var initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettingsIOS = IOSInitializationSettings();
@@ -211,7 +219,7 @@ initializeNotifications() async {
     }
     await Navigator.push(
       context,
-      new MaterialPageRoute(builder: (context) =>  MyHomePage()),
+      new MaterialPageRoute(builder: (context) => MyHomePage()),
     );
   }
 
@@ -219,7 +227,6 @@ initializeNotifications() async {
     DateTime scheduledNotificationDateTime;
     if (date != null) {
       try {
-        print(time);
         var _datetime = date + " " + time;
         scheduledNotificationDateTime = (DateTime.parse(_datetime));
       } catch (e) {

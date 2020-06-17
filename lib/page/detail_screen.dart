@@ -71,7 +71,6 @@ class _DetailScreenState extends State<DetailScreen>
         var _datetime;
         var _date;
         try{
-          print(_task.time);
           _datetime = _task.date +" "+_task.time;
           _date = DateFormat('dd MMM, hh:mm').format(DateTime.parse(_datetime));
         }

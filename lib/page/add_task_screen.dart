@@ -197,7 +197,6 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     DateTime scheduledNotificationDateTime;
     if (date != null) {
       try {
-        print(time);
         var _datetime = date + " " + time;
         scheduledNotificationDateTime = (DateTime.parse(_datetime));
       } catch (e) {
